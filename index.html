@@ -468,6 +468,24 @@
     return `<a class="btn btn-insta" href="https://instagram.com/${encodeURIComponent(clean)}" target="_blank" rel="noopener">Instagram</a>`;
   }
 
+  function formatDistance(valor, hasSpecificAddress) {
+    if (!valor || !hasSpecificAddress) return "";
+
+    const raw = String(valor).trim();
+    // Verifica se é apenas número (com vírgula ou ponto)
+    const num = Number(raw.replace(",", "."));
+
+    if (!isNaN(num) && /^[\d.,]+$/.test(raw)) {
+      if (num < 1) {
+        return `📍 ${Math.round(num * 1000)} m`;
+      }
+      return `📍 ${num.toFixed(1).replace(".", ",")} km`;
+    }
+
+    // Se alguém escrever texto livre (ex: "5 min a pé"), exibe como está
+    return `📍 ${escapeHtml(raw)}`;
+  }
+
   function renderCards() {
     const query = document.getElementById("searchInput").value.trim().toLowerCase();
     const filtered = allItems.filter(item => {
@@ -500,7 +518,7 @@
           <div>
             <div class="card-top">
               ${item.categoria ? `<span class="badge ${isEmergency ? "badge-emergency" : ""}">${escapeHtml(item.categoria)}</span>` : ""}
-              ${item.deslocamento ? `<span class="distance-pill">${escapeHtml(item.deslocamento)}</span>` : ""}
+              ${formatDistance(item.deslocamento, hasSpecificAddress) ? `<span class="distance-pill">${formatDistance(item.deslocamento, hasSpecificAddress)}</span>` : ""}
             </div>
             <h3>${escapeHtml(item.nome)}</h3>
             ${item.endereco ? `<p class="address">${escapeHtml(item.endereco)}</p>` : ""}
