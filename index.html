@@ -9,6 +9,8 @@
       --navy: #0B2545;
       --navy-light: #133B6B;
       --gold: #C9A227;
+      --wa-green: #16A34A;
+      --wa-green-hover: #15803D;
       --bg: #F4F6F9;
       --card: #FFFFFF;
       --text: #1E293B;
@@ -28,28 +30,46 @@
     }
 
     header {
-      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+      /* Quando você subir 'header.jpg' na raiz do repositório, ela aparece automaticamente */
+      background-color: var(--navy);
+      background-image:
+        linear-gradient(135deg, rgba(11, 37, 69, 0.80) 0%, rgba(19, 59, 107, 0.86) 100%),
+        url('header.jpg');
+      background-size: cover;
+      background-position: center;
       color: #FFF;
-      padding: 28px 16px 20px;
+      padding: 32px 16px 22px;
       text-align: center;
       border-bottom: 4px solid var(--gold);
     }
 
-    header h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: 0.4px; }
-    header p { font-size: 0.9rem; color: #CBD5E1; margin-top: 4px; }
+    header h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+    }
+
+    header p {
+      font-size: 0.92rem;
+      color: #E2E8F0;
+      margin-top: 4px;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    }
 
     .tabs { display: flex; justify-content: center; gap: 8px; margin-top: 18px; }
 
     .tab-btn {
-      background: rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.14);
       color: #FFF;
-      border: 1px solid rgba(255, 255, 255, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.3);
       padding: 8px 18px;
       border-radius: 999px;
       font-size: 0.9rem;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s;
+      backdrop-filter: blur(4px);
     }
 
     .tab-btn.active { background: var(--gold); color: var(--navy); border-color: var(--gold); }
@@ -67,27 +87,59 @@
       display: none;
     }
 
+    .controls-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .search-wrap {
+      position: relative;
+      flex: 1 1 260px;
+    }
+
+    .search-wrap svg {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      pointer-events: none;
+    }
+
     .search-box {
       width: 100%;
-      padding: 12px 16px;
-      font-size: 1rem;
+      padding: 11px 14px 11px 40px;
+      font-size: 0.96rem;
       border: 1px solid var(--border);
       border-radius: var(--radius);
       background: var(--card);
-      margin-bottom: 12px;
       outline: none;
     }
 
-    .search-box:focus {
+    .search-box:focus, .sort-select:focus {
       border-color: var(--navy);
       box-shadow: 0 0 0 3px rgba(11, 37, 69, 0.1);
+    }
+
+    .sort-select {
+      padding: 11px 14px;
+      font-size: 0.9rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--card);
+      color: var(--text);
+      font-weight: 500;
+      cursor: pointer;
+      outline: none;
     }
 
     .filters {
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     .filter-chip {
@@ -99,9 +151,47 @@
       font-size: 0.82rem;
       font-weight: 500;
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .filter-chip .count {
+      font-size: 0.74rem;
+      background: #E2E8F0;
+      color: var(--navy);
+      padding: 1px 6px;
+      border-radius: 999px;
+      font-weight: 700;
     }
 
     .filter-chip.active { background: var(--navy); color: #FFF; border-color: var(--navy); }
+    .filter-chip.active .count { background: rgba(255, 255, 255, 0.22); color: #FFF; }
+
+    .active-tag-bar {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      background: #EFF6FF;
+      border: 1px solid #BFDBFE;
+      color: var(--navy);
+      padding: 8px 12px;
+      border-radius: 8px;
+      margin-bottom: 14px;
+      font-size: 0.86rem;
+    }
+
+    .clear-tag-btn {
+      margin-left: auto;
+      background: var(--navy);
+      color: #FFF;
+      border: none;
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
 
     .grid {
       display: grid;
@@ -141,13 +231,13 @@
       border-radius: 6px;
     }
 
-    .badge-emergency {
-      background: #FEE2E2;
-      color: #991B1B;
-    }
+    .badge-emergency { background: #FEE2E2; color: #991B1B; }
 
     .distance-pill {
-      font-size: 0.75rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.76rem;
       font-weight: 600;
       color: #0F766E;
       background: #CCFBF1;
@@ -156,10 +246,20 @@
     }
 
     .card h3 { font-size: 1.05rem; margin-bottom: 6px; color: var(--navy); }
-    .card .address { font-size: 0.86rem; color: var(--muted); margin-bottom: 8px; }
+
+    .card .address {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .card .address svg { flex-shrink: 0; margin-top: 3px; color: #94A3B8; }
 
     .card .obs {
-      font-size: 0.88rem;
+      font-size: 0.87rem;
       color: var(--text);
       background: #F8FAFC;
       border-left: 3px solid var(--gold);
@@ -175,13 +275,21 @@
       margin-bottom: 12px;
     }
 
-    .tag-item {
+    .tag-btn {
       font-size: 0.74rem;
-      color: var(--muted);
+      color: var(--navy);
       background: #F1F5F9;
       border: 1px solid var(--border);
-      padding: 2px 8px;
+      padding: 3px 9px;
       border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .tag-btn:hover, .tag-btn.active {
+      background: var(--navy);
+      color: #FFF;
+      border-color: var(--navy);
     }
 
     .card-actions {
@@ -194,7 +302,11 @@
 
     .btn {
       flex: 1;
-      min-width: 90px;
+      min-width: 96px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
       text-align: center;
       text-decoration: none;
       padding: 8px 10px;
@@ -203,10 +315,14 @@
       font-weight: 600;
       cursor: pointer;
       border: none;
+      transition: opacity 0.15s;
     }
 
+    .btn:hover { opacity: 0.92; }
     .btn-primary { background: var(--navy); color: #FFF; }
     .btn-outline { background: transparent; color: var(--navy); border: 1px solid var(--navy); }
+    .btn-whatsapp { background: var(--wa-green); color: #FFF; }
+    .btn-whatsapp:hover { background: var(--wa-green-hover); }
     .btn-insta { background: transparent; color: #BE185D; border: 1px solid #BE185D; }
     .btn-emergency { background: #DC2626; color: #FFF; }
 
@@ -280,15 +396,29 @@
       </div>
     </div>
 
-    <input
-      type="search"
-      id="searchInput"
-      class="search-box"
-      placeholder="Buscar restaurante, farmácia, 24 horas, música ao vivo, dia de chuva..."
-      oninput="renderCards()"
-    >
+    <div class="controls-row">
+      <div class="search-wrap">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input
+          type="search"
+          id="searchInput"
+          class="search-box"
+          placeholder="Buscar restaurante, farmácia, 24 horas, música ao vivo..."
+          oninput="renderCards()"
+        >
+      </div>
+      <select id="sortSelect" class="sort-select" onchange="renderCards()" aria-label="Ordenar locais">
+        <option value="default">Ordem padrão</option>
+        <option value="distance">Mais próximos primeiro</option>
+      </select>
+    </div>
 
     <div class="filters" id="categoryFilters"></div>
+
+    <div class="active-tag-bar" id="activeTagBar">
+      <span>Filtrando pela tag: <strong id="activeTagName"></strong></span>
+      <button class="clear-tag-btn" onclick="clearTagFilter()">Limpar filtro</button>
+    </div>
 
     <div id="cardsContainer" class="grid">
       <div class="status-msg">Carregando Guia de Itapoá...</div>
@@ -331,17 +461,28 @@
 <script>
   // =========================================================================
   // CONFIGURAÇÃO: Cole aqui os links da sua Planilha CSV e do Google Forms
-  // =========================================================================
+  // =========================================================================  
   const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRlhxNsPo1x1LhYlb5FoKgK1Tudadq__JN6NkoF3Wh6O41STGW-S3fYqRS77SlBlOI4bJh29eH1qbbY/pub?gid=1259216439&single=true&output=csv"; // Ex: "https://docs.google.com/spreadsheets/d/e/2PACX-.../pub?gid=0&single=true&output=csv"
   const SUGGEST_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSckSNGGT4XxRpJ1QMV6avOQPgM1pdqWCnOLBamvy9aAdUJyhg/viewform?usp=publish-editor"; // Ex: "https://forms.gle/..."
 
+  // Ícones SVG inline (zero dependências externas)
+  const ICONS = {
+    pin: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>`,
+    map: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" x2="9" y1="3" y2="18"/><line x1="15" x2="15" y1="6" y2="21"/></svg>`,
+    phone: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>`,
+    whatsapp: `<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2m5.81 14.07c-.24.68-1.41 1.3-1.95 1.38-.5.07-1.13.1-1.82-.12-.42-.14-.96-.31-1.65-.61-2.9-1.25-4.79-4.18-4.94-4.38-.14-.2-1.18-1.57-1.18-3 0-1.43.75-2.13 1.01-2.42.27-.29.58-.36.78-.36.19 0 .39 0 .56.01.18.01.42-.07.66.5.24.58.82 2.01.89 2.16.07.15.12.32.02.51-.1.19-.15.32-.29.49-.15.17-.31.38-.44.51-.15.15-.3.31-.13.6.17.29.76 1.25 1.63 2.03 1.12 1 2.06 1.31 2.35 1.46.29.15.46.12.63-.07.17-.19.73-.85.92-1.14.19-.29.39-.24.65-.15.27.1 1.69.8 1.98.94.29.15.49.22.56.34.07.12.07.7-.17 1.38Z"/></svg>`,
+    instagram: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>`
+  };
+
   const FALLBACK_DATA = [
-    { categoria: "Saúde e Emergência", nome: "Pronto Atendimento 24 Horas (PA)", endereco: "Rua Mariana Michels Borges, 685 - Itapema do Norte", observacao: "Atendimento médico de urgência 24h.", contato: "4735395970", deslocamento: "", instagram: "", tags: "24 horas; Emergência; Saúde" },
-    { categoria: "Bares e Música", nome: "Bar do Alemão", endereco: "Rua Bento Francisco da Silva, 380 - Itapema do Norte", observacao: "Música ao vivo!", contato: "", deslocamento: "", instagram: "", tags: "Música ao vivo" }
+    { categoria: "Saúde e Emergência", nome: "Pronto Atendimento 24 Horas (PA)", endereco: "Rua Mariana Michels Borges, 685 - Itapema do Norte", observacao: "Atendimento médico de urgência 24h.", contato: "4735395970", deslocamento: "3,161", instagram: "", tags: "24 horas; Emergência; Saúde" },
+    { categoria: "Utilidade Pública", nome: "Whats da Rogga", endereco: "Itapoá - SC", observacao: "Central de Relacionamento Rôgga Empreendimentos.", contato: "4730323764*", deslocamento: "4,836", instagram: "", tags: "" },
+    { categoria: "Bares e Música", nome: "Bar do Alemão", endereco: "Rua Bento Francisco da Silva, 380 - Itapema do Norte", observacao: "Música ao vivo!", contato: "", deslocamento: "4,426", instagram: "", tags: "Música ao vivo" }
   ];
 
   let allItems = [];
   let activeCategory = "Todos";
+  let activeTag = "";
 
   const params = new URLSearchParams(window.location.search);
   if (params.get("hospede") === "1") {
@@ -349,17 +490,11 @@
   }
 
   const suggestEl = document.getElementById("suggestLink");
-  if (SUGGEST_FORM_URL) {
-    suggestEl.href = SUGGEST_FORM_URL;
-  } else {
-    suggestEl.parentElement.style.display = "none";
-  }
-
   const recommendBtn = document.getElementById("recommendBtn");
   if (SUGGEST_FORM_URL) {
     suggestEl.href = SUGGEST_FORM_URL;
     recommendBtn.href = SUGGEST_FORM_URL;
-    recommendBtn.style.display = "inline-block";
+    recommendBtn.style.display = "inline-flex";
   } else {
     suggestEl.parentElement.style.display = "none";
   }
@@ -371,7 +506,6 @@
     document.getElementById("tab-condomino").classList.toggle("section-hidden", tabName !== "condomino");
   }
 
-  // Atualize o CEP na função de copiar:
   function copyAddress(btn) {
     const text = "Rua Carlos Afonso Frings (Rua 1330), nº 347 - Balneário Itapoá, Itapoá/SC - CEP 89360-131";
     navigator.clipboard.writeText(text).then(() => {
@@ -432,12 +566,45 @@
     }).filter(item => item.nome);
   }
 
+  function hasSpecificAddress(endereco) {
+    const clean = (endereco || "").trim().toLowerCase();
+    return Boolean(clean && clean !== "itapoá - sc" && clean !== "itapoa - sc");
+  }
+
+  function parseDistanceKm(valor, specificAddr) {
+    if (!valor || !specificAddr) return Infinity;
+    const raw = String(valor).trim();
+    if (!/^[\d.,]+$/.test(raw)) return Infinity;
+    const num = Number(raw.replace(",", "."));
+    return isNaN(num) ? Infinity : num;
+  }
+
+  function formatDistance(valor, specificAddr) {
+    if (!valor || !specificAddr) return "";
+    const raw = String(valor).trim();
+    const num = Number(raw.replace(",", "."));
+
+    if (!isNaN(num) && /^[\d.,]+$/.test(raw)) {
+      if (num < 1) return `${Math.round(num * 1000)} m`;
+      return `${num.toFixed(1).replace(".", ",")} km`;
+    }
+    return escapeHtml(raw);
+  }
+
   function renderFilters() {
-    const categories = ["Todos", ...new Set(allItems.map(i => i.categoria).filter(Boolean))];
+    const counts = { Todos: allItems.length };
+    allItems.forEach(item => {
+      if (item.categoria) {
+        counts[item.categoria] = (counts[item.categoria] || 0) + 1;
+      }
+    });
+
+    const categories = ["Todos", ...Object.keys(counts).filter(c => c !== "Todos")];
     const container = document.getElementById("categoryFilters");
     container.innerHTML = categories.map(cat => `
       <button class="filter-chip ${cat === activeCategory ? "active" : ""}" onclick="setCategory('${escapeHtml(cat)}')">
-        ${escapeHtml(cat)}
+        <span>${escapeHtml(cat)}</span>
+        <span class="count">${counts[cat]}</span>
       </button>
     `).join("");
   }
@@ -448,51 +615,70 @@
     renderCards();
   }
 
+  function filterByTag(tag) {
+    if (activeTag.toLowerCase() === tag.toLowerCase()) {
+      clearTagFilter();
+      return;
+    }
+    activeTag = tag;
+    activeCategory = "Todos"; // Mostra a tag em todas as categorias
+    document.getElementById("activeTagName").textContent = tag;
+    document.getElementById("activeTagBar").style.display = "flex";
+    renderFilters();
+    renderCards();
+    window.scrollTo({ top: document.getElementById("activeTagBar").offsetTop - 16, behavior: "smooth" });
+  }
+
+  function clearTagFilter() {
+    activeTag = "";
+    document.getElementById("activeTagBar").style.display = "none";
+    renderCards();
+  }
+
   function buildContactButton(contato, isEmergency) {
-    const digits = (contato || "").replace(/\D/g, "");
+    const raw = String(contato || "").trim();
+    if (!raw) return "";
+
+    const forceWhatsApp = raw.endsWith("*") || raw.toLowerCase().startsWith("wa:");
+    const digits = raw.replace(/\D/g, "");
     if (!digits) return "";
 
-    // Celular brasileiro (11 dígitos com 9 após o DDD) -> WhatsApp
-    if (digits.length === 11 && digits[2] === "9") {
-      return `<a class="btn btn-outline" href="https://wa.me/55${digits}" target="_blank" rel="noopener">WhatsApp</a>`;
+    const isMobile = digits.length === 11 && digits[2] === "9";
+
+    if (forceWhatsApp || isMobile) {
+      return `<a class="btn btn-whatsapp" href="https://wa.me/55${digits}" target="_blank" rel="noopener">${ICONS.whatsapp} WhatsApp</a>`;
     }
 
-    // Emergência curta (190, 192, 193, 199), 0800 ou telefone fixo -> Ligar
+    const displayNum = raw.replace(/\*$/, "").replace(/^wa:/i, "");
     const btnClass = isEmergency ? "btn btn-emergency" : "btn btn-outline";
-    return `<a class="${btnClass}" href="tel:${digits}">Ligar (${escapeHtml(contato)})</a>`;
+    return `<a class="${btnClass}" href="tel:${digits}">${ICONS.phone} Ligar (${escapeHtml(displayNum)})</a>`;
   }
 
   function buildInstagramButton(insta) {
     const clean = (insta || "").trim().replace(/^@/, "").replace(/^https?:\/\/(www\.)?instagram\.com\//i, "").replace(/\/$/, "");
     if (!clean) return "";
-    return `<a class="btn btn-insta" href="https://instagram.com/${encodeURIComponent(clean)}" target="_blank" rel="noopener">Instagram</a>`;
-  }
-
-  function formatDistance(valor, hasSpecificAddress) {
-    if (!valor || !hasSpecificAddress) return "";
-
-    const raw = String(valor).trim();
-    // Verifica se é apenas número (com vírgula ou ponto)
-    const num = Number(raw.replace(",", "."));
-
-    if (!isNaN(num) && /^[\d.,]+$/.test(raw)) {
-      if (num < 1) {
-        return `📍 ${Math.round(num * 1000)} m`;
-      }
-      return `📍 ${num.toFixed(1).replace(".", ",")} km`;
-    }
-
-    // Se alguém escrever texto livre (ex: "5 min a pé"), exibe como está
-    return `📍 ${escapeHtml(raw)}`;
+    return `<a class="btn btn-insta" href="https://instagram.com/${encodeURIComponent(clean)}" target="_blank" rel="noopener">${ICONS.instagram} Instagram</a>`;
   }
 
   function renderCards() {
     const query = document.getElementById("searchInput").value.trim().toLowerCase();
-    const filtered = allItems.filter(item => {
+    const sortMode = document.getElementById("sortSelect").value;
+
+    let filtered = allItems.filter(item => {
       const matchesCat = activeCategory === "Todos" || item.categoria === activeCategory;
+      const itemTags = (item.tags || "").split(";").map(t => t.trim().toLowerCase()).filter(Boolean);
+      const matchesTag = !activeTag || itemTags.includes(activeTag.toLowerCase());
       const haystack = `${item.categoria} ${item.nome} ${item.endereco} ${item.observacao} ${item.deslocamento} ${item.tags}`.toLowerCase();
-      return matchesCat && haystack.includes(query);
+      return matchesCat && matchesTag && haystack.includes(query);
     });
+
+    if (sortMode === "distance") {
+      filtered = [...filtered].sort((a, b) => {
+        const distA = parseDistanceKm(a.deslocamento, hasSpecificAddress(a.endereco));
+        const distB = parseDistanceKm(b.deslocamento, hasSpecificAddress(b.endereco));
+        return distA - distB;
+      });
+    }
 
     const container = document.getElementById("cardsContainer");
     if (filtered.length === 0) {
@@ -502,15 +688,19 @@
 
     container.innerHTML = filtered.map(item => {
       const isEmergency = (item.categoria || "").toLowerCase().includes("emergência");
-      const hasSpecificAddress = item.endereco && item.endereco.toLowerCase() !== "itapoá - sc";
+      const specificAddr = hasSpecificAddress(item.endereco);
       const mapsQuery = encodeURIComponent(`${item.nome}, ${item.endereco}, Itapoá - SC`);
-      const mapsUrl = hasSpecificAddress ? `https://www.google.com/maps/search/?api=1&query=${mapsQuery}` : "";
+      const mapsUrl = specificAddr ? `https://www.google.com/maps/search/?api=1&query=${mapsQuery}` : "";
+      const distText = formatDistance(item.deslocamento, specificAddr);
 
       const tagsHtml = (item.tags || "")
         .split(";")
         .map(t => t.trim())
         .filter(Boolean)
-        .map(t => `<span class="tag-item">${escapeHtml(t)}</span>`)
+        .map(t => {
+          const isActive = activeTag.toLowerCase() === t.toLowerCase();
+          return `<button type="button" class="tag-btn ${isActive ? "active" : ""}" onclick="filterByTag('${escapeHtml(t)}')">${escapeHtml(t)}</button>`;
+        })
         .join("");
 
       return `
@@ -518,15 +708,15 @@
           <div>
             <div class="card-top">
               ${item.categoria ? `<span class="badge ${isEmergency ? "badge-emergency" : ""}">${escapeHtml(item.categoria)}</span>` : ""}
-              ${formatDistance(item.deslocamento, hasSpecificAddress) ? `<span class="distance-pill">${formatDistance(item.deslocamento, hasSpecificAddress)}</span>` : ""}
+              ${distText ? `<span class="distance-pill">${ICONS.pin} ${distText}</span>` : ""}
             </div>
             <h3>${escapeHtml(item.nome)}</h3>
-            ${item.endereco ? `<p class="address">${escapeHtml(item.endereco)}</p>` : ""}
+            ${item.endereco ? `<p class="address">${ICONS.pin}<span>${escapeHtml(item.endereco)}</span></p>` : ""}
             ${item.observacao ? `<p class="obs">${escapeHtml(item.observacao)}</p>` : ""}
             ${tagsHtml ? `<div class="tags-list">${tagsHtml}</div>` : ""}
           </div>
           <div class="card-actions">
-            ${mapsUrl ? `<a class="btn btn-primary" href="${mapsUrl}" target="_blank" rel="noopener">Ver no Maps</a>` : ""}
+            ${mapsUrl ? `<a class="btn btn-primary" href="${mapsUrl}" target="_blank" rel="noopener">${ICONS.map} Ver no Maps</a>` : ""}
             ${buildContactButton(item.contato, isEmergency)}
             ${buildInstagramButton(item.instagram)}
           </div>
