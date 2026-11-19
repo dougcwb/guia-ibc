@@ -85,21 +85,18 @@
 
     .filters {
       display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding-bottom: 8px;
+      flex-wrap: wrap;
+      gap: 6px;
       margin-bottom: 16px;
-      -webkit-overflow-scrolling: touch;
     }
 
     .filter-chip {
-      white-space: nowrap;
-      padding: 7px 14px;
+      padding: 6px 12px;
       border-radius: 999px;
       border: 1px solid var(--border);
       background: var(--card);
       color: var(--text);
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       font-weight: 500;
       cursor: pointer;
     }
@@ -274,10 +271,13 @@
       <div>
         <strong style="color: var(--navy);">Endereço do Condomínio</strong>
         <div style="font-size: 0.88rem; color: var(--muted);">
-          Rua Carlos Afonso Frings (Rua 1330), nº 347 — Balneário Itapoá, Itapoá/SC — CEP 89249-000
+          Rua Carlos Afonso Frings (Rua 1330), nº 347 — Balneário Itapoá, Itapoá/SC — CEP 89360-131
         </div>
       </div>
-      <button class="btn btn-outline" style="flex: 0 0 auto;" onclick="copyAddress(this)">Copiar endereço</button>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <button class="btn btn-outline" style="flex: 0 0 auto;" onclick="copyAddress(this)">Copiar endereço</button>
+        <a id="recommendBtn" class="btn btn-primary" style="flex: 0 0 auto; display: none;" href="#" target="_blank" rel="noopener">+ Recomende um lugar</a>
+      </div>
     </div>
 
     <input
@@ -333,7 +333,7 @@
   // CONFIGURAÇÃO: Cole aqui os links da sua Planilha CSV e do Google Forms
   // =========================================================================
   const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRlhxNsPo1x1LhYlb5FoKgK1Tudadq__JN6NkoF3Wh6O41STGW-S3fYqRS77SlBlOI4bJh29eH1qbbY/pub?gid=1259216439&single=true&output=csv"; // Ex: "https://docs.google.com/spreadsheets/d/e/2PACX-.../pub?gid=0&single=true&output=csv"
-  const SUGGEST_FORM_URL = ""; // Ex: "https://forms.gle/..."
+  const SUGGEST_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSckSNGGT4XxRpJ1QMV6avOQPgM1pdqWCnOLBamvy9aAdUJyhg/viewform?usp=publish-editor"; // Ex: "https://forms.gle/..."
 
   const FALLBACK_DATA = [
     { categoria: "Saúde e Emergência", nome: "Pronto Atendimento 24 Horas (PA)", endereco: "Rua Mariana Michels Borges, 685 - Itapema do Norte", observacao: "Atendimento médico de urgência 24h.", contato: "4735395970", deslocamento: "", instagram: "", tags: "24 horas; Emergência; Saúde" },
@@ -355,6 +355,15 @@
     suggestEl.parentElement.style.display = "none";
   }
 
+  const recommendBtn = document.getElementById("recommendBtn");
+  if (SUGGEST_FORM_URL) {
+    suggestEl.href = SUGGEST_FORM_URL;
+    recommendBtn.href = SUGGEST_FORM_URL;
+    recommendBtn.style.display = "inline-block";
+  } else {
+    suggestEl.parentElement.style.display = "none";
+  }
+
   function switchTab(tabName, btn) {
     document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
@@ -362,8 +371,9 @@
     document.getElementById("tab-condomino").classList.toggle("section-hidden", tabName !== "condomino");
   }
 
+  // Atualize o CEP na função de copiar:
   function copyAddress(btn) {
-    const text = "Rua Carlos Afonso Frings (Rua 1330), nº 347 - Balneário Itapoá, Itapoá/SC - CEP 89249-000";
+    const text = "Rua Carlos Afonso Frings (Rua 1330), nº 347 - Balneário Itapoá, Itapoá/SC - CEP 89360-131";
     navigator.clipboard.writeText(text).then(() => {
       const original = btn.textContent;
       btn.textContent = "Copiado!";
