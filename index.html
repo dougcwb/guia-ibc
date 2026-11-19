@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Itapoá Beach Club — Guia & Portais</title>
+  <link rel="preconnect" href="https://docs.google.com">
+  <link rel="preconnect" href="https://doc-0g-00-sheets.googleusercontent.com">
   <style>
     :root {
       --navy: #0B2545;
@@ -725,6 +727,14 @@
     }).join("");
   }
 
+  const CACHE_KEY = "ibc_guia_csv_cache_v1";
+
+  function applyCsvData(csvText) {
+    allItems = parseCSV(csvText);
+    renderFilters();
+    renderCards();
+  }
+
   async function init() {
     if (!SHEET_CSV_URL) {
       document.getElementById("demoBanner").style.display = "block";
@@ -734,23 +744,33 @@
       return;
     }
 
+    // 1. Tenta carregar instantaneamente do cache local
+    const cachedCsv = localStorage.getItem(CACHE_KEY);
+    if (cachedCsv) {
+      applyCsvData(cachedCsv);
+    }
+
+    // 2. Busca a versão mais recente da planilha em segundo plano
     try {
-      const response = await fetch(SHEET_CSV_URL, { cache: "no-store" });
+      const response = await fetch(SHEET_CSV_URL);
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const csvText = await response.text();
-      allItems = parseCSV(csvText);
-      renderFilters();
-      renderCards();
+      const freshCsv = await response.text();
+
+      // Só re-renderiza se o conteúdo mudou ou se não havia cache
+      if (freshCsv && freshCsv !== cachedCsv) {
+        localStorage.setItem(CACHE_KEY, freshCsv);
+        applyCsvData(freshCsv);
+      }
     } catch (err) {
-      document.getElementById("cardsContainer").innerHTML = `
-        <div class="status-msg">
-          Não foi possível carregar o guia agora. Verifique se a planilha está publicada como CSV na web.
-        </div>`;
+      if (!cachedCsv) {
+        document.getElementById("cardsContainer").innerHTML = `
+          <div class="status-msg">
+            Não foi possível carregar o guia agora. Verifique se a planilha está publicada como CSV na web.
+          </div>`;
+      }
       console.error("Erro ao carregar CSV:", err);
     }
   }
-
-  init();
 </script>
 </body>
 </html>
