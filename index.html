@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Itapoá Beach Club — Guia & Portais</title>
+  <style>
+    :root {
+      --navy: #0B2545;
+      --navy-light: #133B6B;
+      --gold: #C9A227;
+      --bg: #F4F6F9;
+      --card: #FFFFFF;
+      --text: #1E293B;
+      --muted: #64748B;
+      --border: #E2E8F0;
+      --radius: 12px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding-bottom: 48px;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+      color: #FFF;
+      padding: 28px 16px 20px;
+      text-align: center;
+      border-bottom: 4px solid var(--gold);
+    }
+
+    header h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+    }
+
+    header p {
+      font-size: 0.9rem;
+      color: #CBD5E1;
+      margin-top: 4px;
+    }
+
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .tab-btn {
+      background: rgba(255, 255, 255, 0.12);
+      color: #FFF;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      padding: 8px 18px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      background: var(--gold);
+      color: var(--navy);
+      border-color: var(--gold);
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    .demo-banner {
+      background: #FEF3C7;
+      color: #92400E;
+      border: 1px solid #F59E0B;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 0.85rem;
+      margin-bottom: 14px;
+      display: none;
+    }
+
+    .search-box {
+      width: 100%;
+      padding: 12px 16px;
+      font-size: 1rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--card);
+      margin-bottom: 12px;
+      outline: none;
+    }
+
+    .search-box:focus {
+      border-color: var(--navy);
+      box-shadow: 0 0 0 3px rgba(11, 37, 69, 0.1);
+    }
+
+    .filters {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 16px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .filter-chip {
+      white-space: nowrap;
+      padding: 7px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .filter-chip.active {
+      background: var(--navy);
+      color: #FFF;
+      border-color: var(--navy);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: var(--navy);
+      background: #E2E8F0;
+      padding: 3px 8px;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      width: fit-content;
+    }
+
+    .card h3 {
+      font-size: 1.05rem;
+      margin-bottom: 6px;
+      color: var(--navy);
+    }
+
+    .card .address {
+      font-size: 0.86rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .card .obs {
+      font-size: 0.88rem;
+      color: var(--text);
+      background: #F8FAFC;
+      border-left: 3px solid var(--gold);
+      padding: 6px 10px;
+      border-radius: 4px;
+      margin-bottom: 12px;
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: auto;
+      padding-top: 8px;
+    }
+
+    .btn {
+      flex: 1;
+      text-align: center;
+      text-decoration: none;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--navy);
+      color: #FFF;
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--navy);
+      border: 1px solid var(--navy);
+    }
+
+    .section-hidden { display: none; }
+
+    .portal-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .portal-info h3 { color: var(--navy); font-size: 1.05rem; }
+    .portal-info p { color: var(--muted); font-size: 0.88rem; margin-top: 2px; }
+
+    .address-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--navy);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .status-msg {
+      text-align: center;
+      color: var(--muted);
+      padding: 32px 16px;
+      font-size: 0.95rem;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 32px;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    footer a {
+      color: var(--navy);
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Itapoá Beach Club</h1>
+  <p>Guia de Itapoá &amp; Informações do Condomínio</p>
+  <div class="tabs" id="mainTabs">
+    <button class="tab-btn active" onclick="switchTab('guia', this)">Guia de Itapoá</button>
+    <button class="tab-btn" onclick="switchTab('condomino', this)">Área do Condômino</button>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- ABA 1: GUIA DE ITAPOÁ -->
+  <section id="tab-guia">
+    <div class="demo-banner" id="demoBanner">
+      Modo demonstração: cole a URL CSV do seu Google Sheets na constante <code>SHEET_CSV_URL</code> do código para carregar os dados ao vivo.
+    </div>
+
+    <div class="address-box">
+      <div>
+        <strong style="color: var(--navy);">Endereço do Condomínio</strong>
+        <div style="font-size: 0.88rem; color: var(--muted);">
+          Rua Carlos Afonso Frings (Rua 1330), nº 347 — Balneário Itapoá, Itapoá/SC — CEP 89249-000
+        </div>
+      </div>
+      <button class="btn btn-outline" style="flex: 0 0 auto;" onclick="copyAddress(this)">Copiar endereço</button>
+    </div>
+
+    <input
+      type="search"
+      id="searchInput"
+      class="search-box"
+      placeholder="Buscar restaurante, praia, mercado, música ao vivo..."
+      oninput="renderCards()"
+    >
+
+    <div class="filters" id="categoryFilters"></div>
+
+    <div id="cardsContainer" class="grid">
+      <div class="status-msg">Carregando Guia de Itapoá...</div>
+    </div>
+  </section>
+
+  <!-- ABA 2: ÁREA DO CONDÔMINO -->
+  <section id="tab-condomino" class="section-hidden">
+    <div class="portal-card">
+      <div class="portal-info">
+        <h3>Superlógica / Gruvi (Suprema)</h3>
+        <p>Boletos de condomínio, reserva de áreas comuns, atas e comunicados oficiais.</p>
+      </div>
+      <a class="btn btn-primary" style="flex: 0 0 auto;" href="https://suprema.superlogica.net/clients/areadocondomino/" target="_blank" rel="noopener">Acessar Portal</a>
+    </div>
+
+    <div class="portal-card">
+      <div class="portal-info">
+        <h3>Predialize — Manual Digital</h3>
+        <p>Manual do Proprietário, prazos de garantia, especificações e plantas (elétrica/hidráulica).</p>
+      </div>
+      <a class="btn btn-primary" style="flex: 0 0 auto;" href="https://app.predialize.com.br/roga/itapoa-beach-club/" target="_blank" rel="noopener">Acessar Manual</a>
+    </div>
+
+    <div class="portal-card">
+      <div class="portal-info">
+        <h3>Meu Apê Rôgga</h3>
+        <p>Contrato de compra e venda, financeiro com a construtora e abertura de chamados de assistência técnica.</p>
+      </div>
+      <a class="btn btn-primary" style="flex: 0 0 auto;" href="https://meuape.rogga.com.br/" target="_blank" rel="noopener">Acessar Rôgga</a>
+    </div>
+  </section>
+
+  <footer>
+    Tem alguma dica nova ou correção para o guia?
+    <a id="suggestLink" href="#" target="_blank" rel="noopener">Enviar sugestão</a>
+  </footer>
+</div>
+
+<script>
+  // =========================================================================
+  // CONFIGURAÇÃO: Cole aqui os links da sua Planilha CSV e do Google Forms
+  // =========================================================================
+  const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1GG9RG17-_qLybIScIq_tFLZK4NkiT6IubBeh56npYCU/edit?usp=sharing"; // Ex: "https://docs.google.com/spreadsheets/d/e/2PACX-.../pub?gid=0&single=true&output=csv"
+  const SUGGEST_FORM_URL = ""; // Ex: "https://forms.gle/..."
+
+  // Dados de exemplo usados apenas enquanto SHEET_CSV_URL estiver vazio
+  const FALLBACK_DATA = [
+    { categoria: "Restaurantes", nome: "Restaurante LOÁ POA", endereco: "Avenida Dr. Francisco Burzzio, 36 - Barra do Saí", observacao: "", contato: "" },
+    { categoria: "Bares e Música", nome: "Bar do Alemão", endereco: "Rua Bento Francisco da Silva, 380 - Itapema do Norte", observacao: "Música ao vivo!", contato: "" },
+    { categoria: "Cafés e Padarias", nome: "Posto Manchester", endereco: "Avenida Celso Ramos, 2265", observacao: "Ótima opção para almoço e café da tarde.", contato: "" },
+    { categoria: "Pizzarias e Lanchonetes", nome: "Pastelaria O Bom Pastel", endereco: "Avenida André Rodrigues de Freitas, 940", observacao: "Dica especial: o pastel é muito bom!", contato: "" },
+    { categoria: "Supermercados", nome: "Bavaresco Itapoá", endereco: "Rua do Príncipe, 2340", observacao: "Excelente opção para compras.", contato: "" },
+    { categoria: "Praias e Passeios", nome: "Prainha do Cristo", endereco: "Pontal do Norte", observacao: "Região revitalizada com alargamento da faixa de areia.", contato: "" },
+    { categoria: "Serviços", nome: "Estúdio Halaiko", endereco: "Itapoá - SC", observacao: "Salão de beleza. Marcar com antecedência!", contato: "47999283220" }
+  ];
+
+  let allItems = [];
+  let activeCategory = "Todos";
+
+  // Modo hóspede (?hospede=1 oculta a aba administrativa)
+  const params = new URLSearchParams(window.location.search);
+  if (params.get("hospede") === "1") {
+    document.getElementById("mainTabs").style.display = "none";
+  }
+
+  // Configura link de sugestões no rodapé
+  const suggestEl = document.getElementById("suggestLink");
+  if (SUGGEST_FORM_URL) {
+    suggestEl.href = SUGGEST_FORM_URL;
+  } else {
+    suggestEl.parentElement.style.display = "none";
+  }
+
+  function switchTab(tabName, btn) {
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    document.getElementById("tab-guia").classList.toggle("section-hidden", tabName !== "guia");
+    document.getElementById("tab-condomino").classList.toggle("section-hidden", tabName !== "condomino");
+  }
+
+  function copyAddress(btn) {
+    const text = "Rua Carlos Afonso Frings (Rua 1330), nº 347 - Balneário Itapoá, Itapoá/SC - CEP 89249-000";
+    navigator.clipboard.writeText(text).then(() => {
+      const original = btn.textContent;
+      btn.textContent = "Copiado!";
+      setTimeout(() => btn.textContent = original, 2000);
+    });
+  }
+
+  function escapeHtml(str) {
+    return String(str || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
+  // Parser CSV compatível com RFC 4180 (trata vírgulas e quebras de linha dentro de aspas)
+  function parseCSV(text) {
+    const rows = [];
+    let row = [];
+    let field = "";
+    let inQuotes = false;
+
+    for (let i = 0; i < text.length; i++) {
+      const ch = text[i];
+      const next = text[i + 1];
+
+      if (inQuotes) {
+        if (ch === '"' && next === '"') {
+          field += '"';
+          i++;
+        } else if (ch === '"') {
+          inQuotes = false;
+        } else {
+          field += ch;
+        }
+      } else {
+        if (ch === '"') {
+          inQuotes = true;
+        } else if (ch === ",") {
+          row.push(field.trim());
+          field = "";
+        } else if (ch === "\n" || (ch === "\r" && next === "\n")) {
+          if (ch === "\r") i++;
+          row.push(field.trim());
+          if (row.some(cell => cell !== "")) rows.push(row);
+          row = [];
+          field = "";
+        } else {
+          field += ch;
+        }
+      }
+    }
+
+    if (field !== "" || row.length > 0) {
+      row.push(field.trim());
+      if (row.some(cell => cell !== "")) rows.push(row);
+    }
+
+    if (rows.length < 2) return [];
+
+    const headers = rows[0].map(h => h.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""));
+    return rows.slice(1).map(r => {
+      const obj = {};
+      headers.forEach((h, idx) => obj[h] = r[idx] || "");
+      return obj;
+    }).filter(item => item.nome);
+  }
+
+  function renderFilters() {
+    const categories = ["Todos", ...new Set(allItems.map(i => i.categoria).filter(Boolean))];
+    const container = document.getElementById("categoryFilters");
+    container.innerHTML = categories.map(cat => `
+      <button class="filter-chip ${cat === activeCategory ? "active" : ""}" onclick="setCategory('${escapeHtml(cat)}')">
+        ${escapeHtml(cat)}
+      </button>
+    `).join("");
+  }
+
+  function setCategory(cat) {
+    activeCategory = cat;
+    renderFilters();
+    renderCards();
+  }
+
+  function renderCards() {
+    const query = document.getElementById("searchInput").value.trim().toLowerCase();
+    const filtered = allItems.filter(item => {
+      const matchesCat = activeCategory === "Todos" || item.categoria === activeCategory;
+      const haystack = `${item.categoria} ${item.nome} ${item.endereco} ${item.observacao}`.toLowerCase();
+      return matchesCat && haystack.includes(query);
+    });
+
+    const container = document.getElementById("cardsContainer");
+    if (filtered.length === 0) {
+      container.innerHTML = `<div class="status-msg">Nenhum resultado encontrado para essa busca.</div>`;
+      return;
+    }
+
+    container.innerHTML = filtered.map(item => {
+      const mapsQuery = encodeURIComponent(`${item.nome}, ${item.endereco}, Itapoá - SC`);
+      const mapsUrl = item.endereco ? `https://www.google.com/maps/search/?api=1&query=${mapsQuery}` : "";
+      const phoneDigits = (item.contato || "").replace(/\D/g, "");
+      const waUrl = phoneDigits ? `https://wa.me/55${phoneDigits}` : "";
+
+      return `
+        <article class="card">
+          <div>
+            ${item.categoria ? `<span class="badge">${escapeHtml(item.categoria)}</span>` : ""}
+            <h3>${escapeHtml(item.nome)}</h3>
+            ${item.endereco ? `<p class="address">${escapeHtml(item.endereco)}</p>` : ""}
+            ${item.observacao ? `<p class="obs">${escapeHtml(item.observacao)}</p>` : ""}
+          </div>
+          <div class="card-actions">
+            ${mapsUrl ? `<a class="btn btn-primary" href="${mapsUrl}" target="_blank" rel="noopener">Ver no Maps</a>` : ""}
+            ${waUrl ? `<a class="btn btn-outline" href="${waUrl}" target="_blank" rel="noopener">WhatsApp</a>` : ""}
+          </div>
+        </article>
+      `;
+    }).join("");
+  }
+
+  async function init() {
+    if (!SHEET_CSV_URL) {
+      document.getElementById("demoBanner").style.display = "block";
+      allItems = FALLBACK_DATA;
+      renderFilters();
+      renderCards();
+      return;
+    }
+
+    try {
+      const response = await fetch(SHEET_CSV_URL, { cache: "no-store" });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const csvText = await response.text();
+      allItems = parseCSV(csvText);
+      renderFilters();
+      renderCards();
+    } catch (err) {
+      document.getElementById("cardsContainer").innerHTML = `
+        <div class="status-msg">
+          Não foi possível carregar o guia agora. Verifique se a planilha está publicada como CSV na web.
+        </div>`;
+      console.error("Erro ao carregar CSV:", err);
+    }
+  }
+
+  init();
+</script>
+</body>
+</html>
