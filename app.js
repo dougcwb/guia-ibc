@@ -1,9 +1,8 @@
 // =========================================================================
 // CONFIGURAÇÃO: Cole aqui os links da sua Planilha CSV e do Google Forms
 // =========================================================================
-const SHEET_CSV_URL = ""; // Ex: "https://docs.google.com/spreadsheets/d/e/2PACX-.../pub?gid=0&single=true&output=csv"
-const SUGGEST_FORM_URL = ""; // Ex: "https://forms.gle/..."
-
+const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRlhxNsPo1x1LhYlb5FoKgK1Tudadq__JN6NkoF3Wh6O41STGW-S3fYqRS77SlBlOI4bJh29eH1qbbY/pub?gid=1259216439&single=true&output=csv"; // Ex: "https://docs.google.com/spreadsheets/d/e/2PACX-.../pub?gid=0&single=true&output=csv"
+const SUGGEST_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSckSNGGT4XxRpJ1QMV6avOQPgM1pdqWCnOLBamvy9aAdUJyhg/viewform?usp=publish-editor"; // Ex: "https://forms.gle/..."
 const CACHE_KEY = "ibc_guia_csv_cache_v1";
 
 // Ícones SVG inline (zero dependências externas)
