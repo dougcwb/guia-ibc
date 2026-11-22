@@ -125,18 +125,6 @@
       box-shadow: 0 0 0 3px rgba(11, 37, 69, 0.1);
     }
 
-    .sort-select {
-      padding: 11px 14px;
-      font-size: 0.9rem;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      background: var(--card);
-      color: var(--text);
-      font-weight: 500;
-      cursor: pointer;
-      outline: none;
-    }
-
     .filters {
       display: flex;
       flex-wrap: wrap;
@@ -409,10 +397,6 @@
           oninput="renderCards()"
         >
       </div>
-      <select id="sortSelect" class="sort-select" onchange="renderCards()" aria-label="Ordenar locais">
-        <option value="default">Ordem padrão</option>
-        <option value="distance">Mais próximos primeiro</option>
-      </select>
     </div>
 
     <div class="filters" id="categoryFilters"></div>
@@ -664,7 +648,7 @@
 
   function renderCards() {
     const query = document.getElementById("searchInput").value.trim().toLowerCase();
-    const sortMode = document.getElementById("sortSelect").value;
+    //const sortMode = document.getElementById("sortSelect").value;
 
     let filtered = allItems.filter(item => {
       const matchesCat = activeCategory === "Todos" || item.categoria === activeCategory;
@@ -674,13 +658,20 @@
       return matchesCat && matchesTag && haystack.includes(query);
     });
 
-    if (sortMode === "distance") {
+    /*if (sortMode === "distance") {
       filtered = [...filtered].sort((a, b) => {
         const distA = parseDistanceKm(a.deslocamento, hasSpecificAddress(a.endereco));
         const distB = parseDistanceKm(b.deslocamento, hasSpecificAddress(b.endereco));
         return distA - distB;
       });
-    }
+    }*/
+
+    filtered = [...filtered].sort((a, b) => {
+      const distA = parseDistanceKm(a.deslocamento, hasSpecificAddress(a.endereco));
+      const distB = parseDistanceKm(b.deslocamento, hasSpecificAddress(b.endereco));
+      if (distA !== distB) return distA - distB;
+      return a.nome.localeCompare(b.nome, "pt-BR");
+    });
 
     const container = document.getElementById("cardsContainer");
     if (filtered.length === 0) {
