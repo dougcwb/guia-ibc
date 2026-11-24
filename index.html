@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,100 +9,124 @@
   <link rel="preconnect" href="https://doc-0g-00-sheets.googleusercontent.com">
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<header>
-  <h1>Itapoá Beach Club</h1>
-  <p>Guia de Itapoá &amp; Informações do Condomínio</p>
-  <div class="tabs" id="mainTabs">
-    <button class="tab-btn active" onclick="switchTab('guia', this)">Guia de Itapoá</button>
-    <button class="tab-btn" onclick="switchTab('condomino', this)">Área do Condômino</button>
-  </div>
-</header>
-
-<div class="container">
-
-  <!-- ABA 1: GUIA DE ITAPOÁ -->
-  <section id="tab-guia">
-    <div class="demo-banner" id="demoBanner">
-      Modo demonstração: cole a URL CSV do seu Google Sheets na constante <code>SHEET_CSV_URL</code> do arquivo <code>app.js</code> para carregar os dados ao vivo.
+  <header>
+    <h1>Itapoá Beach Club</h1>
+    <p>Guia de Itapoá &amp; Informações do Condomínio</p>
+    <div class="tabs" id="mainTabs" style="display: none;">
+      <button class="tab-btn active" onclick="switchTab('guia', this)">Guia de Itapoá</button>
+      <button class="tab-btn" onclick="switchTab('condomino', this)">Área do Condômino</button>
     </div>
+  </header>
 
-    <div class="address-box">
-      <div>
-        <strong style="color: var(--navy);">Endereço do Condomínio</strong>
-        <div style="font-size: 0.88rem; color: var(--muted);">
-          Rua Carlos Afonso Frings (Rua 1330), nº 347 — Balneário Itapoá, Itapoá/SC — CEP 89360-131
+  <div class="container">
+
+    <!-- ABA 1: GUIA DE ITAPOÁ (Padrão público) -->
+    <section id="tab-guia">
+      <div class="demo-banner" id="demoBanner">
+        Modo demonstração: cole a URL CSV do seu Google Sheets na constante <code>SHEET_CSV_URL</code> do arquivo
+        <code>app.js</code> para carregar os dados ao vivo.
+      </div>
+
+      <div class="address-box">
+        <div>
+          <strong style="color: var(--navy);">Endereço do Condomínio</strong>
+          <div style="font-size: 0.88rem; color: var(--muted);">
+            Rua Carlos Afonso Frings (Rua 1330), nº 347 — Balneário Itapoá, Itapoá/SC — CEP 89360-131
+          </div>
+        </div>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <button class="btn btn-outline" style="flex: 0 0 auto;" onclick="copyAddress(this)">Copiar endereço</button>
+          <a id="recommendBtn" class="btn btn-primary" style="flex: 0 0 auto; display: none;" href="#" target="_blank"
+            rel="noopener">+ Recomende um lugar</a>
         </div>
       </div>
-      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-        <button class="btn btn-outline" style="flex: 0 0 auto;" onclick="copyAddress(this)">Copiar endereço</button>
-        <a id="recommendBtn" class="btn btn-primary" style="flex: 0 0 auto; display: none;" href="#" target="_blank" rel="noopener">+ Recomende um lugar</a>
+
+      <div class="controls-row">
+        <div class="search-wrap">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.3-4.3" />
+          </svg>
+          <input type="search" id="searchInput" class="search-box"
+            placeholder="Buscar restaurante, farmácia, 24 horas, música ao vivo..." oninput="renderCards()">
+        </div>
+        <select id="sortSelect" class="sort-select" onchange="renderCards()" aria-label="Ordenar locais">
+          <option value="distance">Mais próximos primeiro</option>
+          <option value="alpha">Ordem alfabética (A–Z)</option>
+        </select>
       </div>
-    </div>
 
-    <div class="controls-row">
-      <div class="search-wrap">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-        <input
-          type="search"
-          id="searchInput"
-          class="search-box"
-          placeholder="Buscar restaurante, farmácia, 24 horas, música ao vivo..."
-          oninput="renderCards()"
-        >
+      <div class="filters" id="categoryFilters"></div>
+
+      <div class="active-tag-bar" id="activeTagBar">
+        <span>Filtrando pela tag: <strong id="activeTagName"></strong></span>
+        <button class="clear-tag-btn" onclick="clearTagFilter()">Limpar filtro</button>
       </div>
-      <select id="sortSelect" class="sort-select" onchange="renderCards()" aria-label="Ordenar locais">
-        <option value="distance">Mais próximos primeiro</option>
-        <option value="alpha">Ordem alfabética (A–Z)</option>
-      </select>
-    </div>
 
-    <div class="filters" id="categoryFilters"></div>
-
-    <div class="active-tag-bar" id="activeTagBar">
-      <span>Filtrando pela tag: <strong id="activeTagName"></strong></span>
-      <button class="clear-tag-btn" onclick="clearTagFilter()">Limpar filtro</button>
-    </div>
-
-    <div id="cardsContainer" class="grid">
-      <div class="status-msg">Carregando Guia de Itapoá...</div>
-    </div>
-  </section>
-
-  <!-- ABA 2: ÁREA DO CONDÔMINO -->
-  <section id="tab-condomino" class="section-hidden">
-    <div class="portal-card">
-      <div class="portal-info">
-        <h3>Superlógica / Gruvi (Suprema)</h3>
-        <p>Boletos de condomínio, reserva de áreas comuns, atas e comunicados oficiais.</p>
+      <div id="cardsContainer" class="grid">
+        <div class="status-msg">Carregando Guia de Itapoá...</div>
       </div>
-      <a class="btn btn-primary" style="flex: 0 0 auto;" href="https://suprema.superlogica.net/clients/areadocondomino/" target="_blank" rel="noopener">Acessar Portal</a>
-    </div>
+    </section>
 
-    <div class="portal-card">
-      <div class="portal-info">
-        <h3>Predialize — Manual Digital</h3>
-        <p>Manual do Proprietário, prazos de garantia, especificações e plantas (elétrica/hidráulica).</p>
+    <!-- ABA 2: ÁREA DO CONDÔMINO (Visível apenas com ?condomino=1) -->
+    <section id="tab-condomino" class="section-hidden">
+      <div class="portal-card">
+        <div class="portal-info">
+          <h3>Superlógica / Gruvi (Suprema)</h3>
+          <p>Boletos de condomínio, reserva de áreas comuns, atas e comunicados oficiais.</p>
+        </div>
+        <a class="btn btn-primary" style="flex: 0 0 auto;"
+          href="https://suprema.superlogica.net/clients/areadocondomino/" target="_blank" rel="noopener">Acessar
+          Portal</a>
       </div>
-      <a class="btn btn-primary" style="flex: 0 0 auto;" href="https://app.predialize.com.br/roga/itapoa-beach-club/" target="_blank" rel="noopener">Acessar Manual</a>
-    </div>
 
-    <div class="portal-card">
-      <div class="portal-info">
-        <h3>Meu Apê Rôgga</h3>
-        <p>Contrato de compra e venda, financeiro com a construtora e abertura de chamados de assistência técnica.</p>
+      <div class="portal-card">
+        <div class="portal-info">
+          <h3>Predialize — Manual Digital</h3>
+          <p>Manual do Proprietário, prazos de garantia, especificações e plantas (elétrica/hidráulica).</p>
+        </div>
+        <a class="btn btn-primary" style="flex: 0 0 auto;" href="https://app.predialize.com.br/roga/itapoa-beach-club/"
+          target="_blank" rel="noopener">Acessar Manual</a>
       </div>
-      <a class="btn btn-primary" style="flex: 0 0 auto;" href="https://meuape.rogga.com.br/" target="_blank" rel="noopener">Acessar Rôgga</a>
-    </div>
-  </section>
 
-  <footer>
-    Tem alguma dica nova ou correção para o guia?
-    <a id="suggestLink" href="#" target="_blank" rel="noopener">Enviar sugestão</a>
-  </footer>
-</div>
+      <div class="portal-card">
+        <div class="portal-info">
+          <h3>Meu Apê Rôgga</h3>
+          <p>Contrato de compra e venda, financeiro com a construtora e abertura de chamados de assistência técnica.</p>
+        </div>
+        <a class="btn btn-primary" style="flex: 0 0 auto;" href="https://meuape.rogga.com.br/" target="_blank"
+          rel="noopener">Acessar Rôgga</a>
+      </div>
 
-<script src="app.js"></script>
+      <div class="faq-section">
+        <h2 class="faq-heading">Perguntas Frequentes (FAQ)</h2>
+        <div class="search-wrap" style="margin-bottom: 12px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.3-4.3" />
+          </svg>
+          <input type="search" id="faqSearchInput" class="search-box"
+            placeholder="Buscar dúvida sobre piscina, CEP, garantia, infiltração, Airbnb..." oninput="renderFaq()">
+        </div>
+        <div class="filters" id="faqCategoryFilters"></div>
+        <div id="faqContainer" class="faq-list">
+          <div class="status-msg">Carregando perguntas frequentes...</div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      Tem alguma dica nova ou correção para o guia?
+      <a id="suggestLink" href="#" target="_blank" rel="noopener">Enviar sugestão</a>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
 </body>
+
 </html>

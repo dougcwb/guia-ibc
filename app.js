@@ -1,9 +1,12 @@
 // =========================================================================
-// CONFIGURAÇÃO: Cole aqui os links da sua Planilha CSV e do Google Forms
+// CONFIGURAÇÃO: Cole aqui os links das Planilhas CSV e do Google Forms
 // =========================================================================
-const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRlhxNsPo1x1LhYlb5FoKgK1Tudadq__JN6NkoF3Wh6O41STGW-S3fYqRS77SlBlOI4bJh29eH1qbbY/pub?gid=1259216439&single=true&output=csv"; // Ex: "https://docs.google.com/spreadsheets/d/e/2PACX-.../pub?gid=0&single=true&output=csv"
-const SUGGEST_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSckSNGGT4XxRpJ1QMV6avOQPgM1pdqWCnOLBamvy9aAdUJyhg/viewform?usp=publish-editor"; // Ex: "https://forms.gle/..."
+const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRlhxNsPo1x1LhYlb5FoKgK1Tudadq__JN6NkoF3Wh6O41STGW-S3fYqRS77SlBlOI4bJh29eH1qbbY/pub?gid=1259216439&single=true&output=csv"; // Link CSV da aba do Guia de Itapoá
+const FAQ_CSV_URL = "https://docs.google.com/forms/d/e/1FAIpQLSckSNGGT4XxRpJ1QMV6avOQPgM1pdqWCnOLBamvy9aAdUJyhg/viewform?usp=publish-editor";   // Link CSV da aba 'faq'
+const SUGGEST_FORM_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRlhxNsPo1x1LhYlb5FoKgK1Tudadq__JN6NkoF3Wh6O41STGW-S3fYqRS77SlBlOI4bJh29eH1qbbY/pub?gid=2028583301&single=true&output=csv"; // Link do Google Forms de sugestões
+
 const CACHE_KEY = "ibc_guia_csv_cache_v1";
+const FAQ_CACHE_KEY = "ibc_faq_csv_cache_v1";
 
 // Ícones SVG inline (zero dependências externas)
 const ICONS = {
@@ -20,14 +23,23 @@ const FALLBACK_DATA = [
   { categoria: "Bares e Música", nome: "Bar do Alemão", endereco: "Rua Bento Francisco da Silva, 380 - Itapema do Norte", observacao: "Música ao vivo!", contato: "", deslocamento: "4,426", instagram: "", tags: "Música ao vivo" }
 ];
 
+const FALLBACK_FAQ = [
+  { categoria: "Administração e Portais", pergunta: "Qual CEP usar para compras e concessionárias?", resposta: "Para Correios e entregas, use o CEP 89360-131. Para concessionárias (Celesc, Itapoá Saneamento e Ultragaz), use o CEP 89249-000." },
+  { categoria: "Obras e Garantia", pergunta: "Identifiquei infiltração próxima ao ralo do banheiro, o que fazer?", resposta: "Registre com fotos/vídeos e abra um chamado de assistência técnica no portal Meu Apê Rôgga." }
+];
+
 let allItems = [];
 let activeCategory = "Todos";
 let activeTag = "";
 
-// Modo hóspede (?hospede=1 oculta a aba administrativa)
+let allFaqItems = [];
+let activeFaqCategory = "Todos";
+
+// Modo Condômino: padrão oculto (para hóspedes/público); exibe abas apenas com ?condomino=1
 const params = new URLSearchParams(window.location.search);
-if (params.get("hospede") === "1") {
-  document.getElementById("mainTabs").style.display = "none";
+const isCondomino = params.get("condomino") === "1";
+if (isCondomino) {
+  document.getElementById("mainTabs").style.display = "flex";
 }
 
 // Configura botões de sugestão (topo e rodapé)
@@ -105,9 +117,12 @@ function parseCSV(text) {
     const obj = {};
     headers.forEach((h, idx) => obj[h] = r[idx] || "");
     return obj;
-  }).filter(item => item.nome);
+  });
 }
 
+// =========================================================================
+// GUIA DE ITAPOÁ
+// =========================================================================
 function hasSpecificAddress(endereco) {
   const clean = (endereco || "").trim().toLowerCase();
   return Boolean(clean && clean !== "itapoá - sc" && clean !== "itapoa - sc");
@@ -307,12 +322,108 @@ function renderCards() {
 }
 
 function applyCsvData(csvText) {
-  allItems = parseCSV(csvText);
+  allItems = parseCSV(csvText).filter(item => item.nome);
   renderFilters();
   renderCards();
 }
 
+// =========================================================================
+// FAQ (ÁREA DO CONDÔMINO)
+// =========================================================================
+function renderFaqFilters() {
+  const counts = { Todos: allFaqItems.length };
+  allFaqItems.forEach(item => {
+    if (item.categoria) {
+      counts[item.categoria] = (counts[item.categoria] || 0) + 1;
+    }
+  });
+
+  const categories = ["Todos", ...Object.keys(counts).filter(c => c !== "Todos")];
+  const container = document.getElementById("faqCategoryFilters");
+  container.innerHTML = categories.map(cat => `
+    <button class="filter-chip ${cat === activeFaqCategory ? "active" : ""}" onclick="setFaqCategory('${escapeHtml(cat)}')">
+      <span>${escapeHtml(cat)}</span>
+      <span class="count">${counts[cat]}</span>
+    </button>
+  `).join("");
+}
+
+function setFaqCategory(cat) {
+  activeFaqCategory = cat;
+  renderFaqFilters();
+  renderFaq();
+}
+
+function renderFaq() {
+  const query = document.getElementById("faqSearchInput").value.trim().toLowerCase();
+  const filtered = allFaqItems.filter(item => {
+    const matchesCat = activeFaqCategory === "Todos" || item.categoria === activeFaqCategory;
+    const haystack = `${item.categoria} ${item.pergunta} ${item.resposta}`.toLowerCase();
+    return matchesCat && haystack.includes(query);
+  });
+
+  const container = document.getElementById("faqContainer");
+  if (filtered.length === 0) {
+    container.innerHTML = `<div class="status-msg">Nenhuma pergunta encontrada para essa busca.</div>`;
+    return;
+  }
+
+  container.innerHTML = filtered.map(item => `
+    <details class="faq-item">
+      <summary>
+        ${item.categoria ? `<span class="badge">${escapeHtml(item.categoria)}</span>` : ""}
+        <span class="faq-question-text">${escapeHtml(item.pergunta)}</span>
+      </summary>
+      <div class="faq-answer">${escapeHtml(item.resposta).replace(/\n/g, "<br>")}</div>
+    </details>
+  `).join("");
+}
+
+function applyFaqCsvData(csvText) {
+  allFaqItems = parseCSV(csvText).filter(item => item.pergunta && item.resposta);
+  renderFaqFilters();
+  renderFaq();
+}
+
+async function loadFaq() {
+  if (!isCondomino) return;
+
+  if (!FAQ_CSV_URL) {
+    allFaqItems = FALLBACK_FAQ;
+    renderFaqFilters();
+    renderFaq();
+    return;
+  }
+
+  const cachedFaq = localStorage.getItem(FAQ_CACHE_KEY);
+  if (cachedFaq) {
+    applyFaqCsvData(cachedFaq);
+  }
+
+  try {
+    const response = await fetch(FAQ_CSV_URL);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const freshCsv = await response.text();
+
+    if (freshCsv && freshCsv !== cachedFaq) {
+      localStorage.setItem(FAQ_CACHE_KEY, freshCsv);
+      applyFaqCsvData(freshCsv);
+    }
+  } catch (err) {
+    if (!cachedFaq) {
+      document.getElementById("faqContainer").innerHTML = `
+        <div class="status-msg">Não foi possível carregar o FAQ agora.</div>`;
+    }
+    console.error("Erro ao carregar FAQ CSV:", err);
+  }
+}
+
+// =========================================================================
+// INICIALIZAÇÃO
+// =========================================================================
 async function init() {
+  loadFaq();
+
   if (!SHEET_CSV_URL) {
     document.getElementById("demoBanner").style.display = "block";
     allItems = FALLBACK_DATA;
