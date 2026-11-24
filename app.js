@@ -2,8 +2,8 @@
 // CONFIGURAÇÃO: Cole aqui os links das Planilhas CSV e do Google Forms
 // =========================================================================
 const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRlhxNsPo1x1LhYlb5FoKgK1Tudadq__JN6NkoF3Wh6O41STGW-S3fYqRS77SlBlOI4bJh29eH1qbbY/pub?gid=1259216439&single=true&output=csv"; // Link CSV da aba do Guia de Itapoá
-const FAQ_CSV_URL = "https://docs.google.com/forms/d/e/1FAIpQLSckSNGGT4XxRpJ1QMV6avOQPgM1pdqWCnOLBamvy9aAdUJyhg/viewform?usp=publish-editor";   // Link CSV da aba 'faq'
-const SUGGEST_FORM_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRlhxNsPo1x1LhYlb5FoKgK1Tudadq__JN6NkoF3Wh6O41STGW-S3fYqRS77SlBlOI4bJh29eH1qbbY/pub?gid=2028583301&single=true&output=csv"; // Link do Google Forms de sugestões
+const SUGGEST_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSckSNGGT4XxRpJ1QMV6avOQPgM1pdqWCnOLBamvy9aAdUJyhg/viewform?usp=publish-editor";   // Link CSV da aba 'faq'
+const FAQ_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRlhxNsPo1x1LhYlb5FoKgK1Tudadq__JN6NkoF3Wh6O41STGW-S3fYqRS77SlBlOI4bJh29eH1qbbY/pub?gid=2028583301&single=true&output=csv"; // Link do Google Forms de sugestões
 
 const CACHE_KEY = "ibc_guia_csv_cache_v1";
 const FAQ_CACHE_KEY = "ibc_faq_csv_cache_v1";
